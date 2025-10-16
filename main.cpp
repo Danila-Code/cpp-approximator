@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
 }
 
 double SquareFunc(double x) {
-    return 2.1 * x*x;
+    return 2 * x*x;
 }
 
 bool IsEqual(double lhs, double rhs) {
@@ -60,8 +60,8 @@ private:
         std::vector<double> vec(size + 1);
         std::for_each(vec.begin(), vec.end(),
             [&dis, &gen](double& item) {
-                item = static_cast<int>(dis(gen));
-                //item = dis(gen);
+                //item = static_cast<int>(dis(gen));
+                item = dis(gen);
         });
         polynom_coeff = std::move(vec);
     }
@@ -90,7 +90,7 @@ std::vector<double> GetYFromPolynomial(const std::vector<Data>& data, const std:
 
 void TestGetSolve() {
     size_t max_power = 2;
-    std::vector<Data> data(5);
+    std::vector<Data> data(100);
     RandomPolynomial polynom(max_power);
 
     for(size_t i = 0; i < data.size(); ++i) {
@@ -118,7 +118,7 @@ void TestGetSolve() {
 }
 
 void TestGetSolve2() {
-    std::vector<Data> data(4);
+    std::vector<Data> data(5);
 
     for(size_t i = 0; i < data.size(); ++i) {
         data[i].x = 1 + i;

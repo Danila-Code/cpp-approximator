@@ -22,6 +22,9 @@ public:
     std::optional<std::vector<double>> GetSolve() const;
 
 private:
+    // solve matrix equation by the Gauss method
+    void SolveByTheGauss() const;
+
     // matrix_ stores vectors with columns elements
     // matrix_[0] - match to the first column
     mutable Matrix matrix_;

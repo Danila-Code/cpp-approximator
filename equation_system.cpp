@@ -1,5 +1,7 @@
 #include "equation_system.h"
 
+#include <cassert>
+
 namespace {
 struct Index {
     size_t row;
@@ -100,22 +102,53 @@ std::vector<double> MultiplyMatrix(const Matrix& matrix, const std::vector<doubl
 }
 
 // ********** methods of class EquationSystem  ************
+    // solve matrix equation by the Gauss method
+void EquationSystem::SolveByTheGauss() const {
+    size_t size = matrix_.size();
+
+    for (size_t i = 0; i < size; ++i) {
+        double first_item = matrix_[i][i];
+        assert(first_item);
+
+        // we divide the equation by the first element to get one in the first element
+        for (size_t j = i; j < size; ++j) {
+            matrix_[i][j] /= first_item;
+        }
+        right_part_[i] /= first_item;
+        assert(first_item);
+
+        // we subtract the current one from each row multiplied by the first non-zero element
+        for (size_t raw = 0; raw < size; ++raw) {
+            if (raw == i) {
+                continue;
+            }
+            first_item = matrix_[raw][i];
+            for (size_t j = i;j < size; ++j) {
+                matrix_[raw][j] -= matrix_[i][j] * first_item;
+            }
+            right_part_[raw] -= right_part_[i] * first_item;
+        }
+    }
+}
+
+
 // calc system of equations and return solution
 std::optional<std::vector<double>> EquationSystem::GetSolve() const {
-    std::vector<double> res;
-    res.reserve(matrix_.size());
+    //std::vector<double> res;
+    //res.reserve(matrix_.size());
 
     const double det = GetDeterminant(matrix_);
     if (!det) {
         return std::nullopt;
     }
 
-    
-    /*Matrix inverse_matrix = GetInverseMatrix(matrix_, det);
-    res = MultiplyMatrix(inverse_matrix, right_part_);*/
+    SolveByTheGauss();
+    //res = right_part_;
+    //Matrix inverse_matrix = GetInverseMatrix(matrix_, det);
+    //res = MultiplyMatrix(inverse_matrix, right_part_);
     
 
-    for (size_t i = 0; i < matrix_.size(); ++i) {
+    /*for (size_t i = 0; i < matrix_.size(); ++i) {
         std::vector<double> temp_col = std::move(matrix_[i]);
         matrix_[i] = std::move(right_part_);
 
@@ -124,7 +157,7 @@ std::optional<std::vector<double>> EquationSystem::GetSolve() const {
 
         right_part_ = std::move(matrix_[i]);
         matrix_[i] = std::move(temp_col);
-    }
+    }*/
 
-    return res;
+    return std::move(right_part_);
 }
