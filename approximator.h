@@ -1,3 +1,5 @@
+#pragma once
+
 #include "equation_system.h"
 
 #include <optional>

@@ -1,33 +1,26 @@
 #include <cassert>
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <random>
 
 #include "approximator.h"
+#include "graph_renderer.h"
 
 using namespace std::literals;
 
-constexpr double EPSILON = 1e-6;
 std::ostream& operator<<(std::ostream& out, Data point) {
-    out << "x = "s << point.x << " y = "s << point.y;
+    out << "( "s << point.x << ", "s << point.y << " )"s;
     return out;
 }
 
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
     for (auto item : vec) {
-        out << item << ' ';
+        out << item << std::endl;
     } 
     return out;
-}
-
-double SquareFunc(double x) {
-    return 2 * x*x;
-}
-
-bool IsEqual(double lhs, double rhs) {
-    return fabs(lhs - rhs) < EPSILON;
 }
 
 double CalcY(const std::vector<double>& coeffs, double x) {
@@ -50,6 +43,18 @@ struct RandomPolynomial {
         return CalcY(polynom_coeff, x);
     }
 
+    std::vector<Data> GenerateData(double min, double max, size_t count) const {
+        std::vector<Data> data(count);
+        double step = (max - min) / (count - 1);
+        double next = min;
+        for (auto& point : data) {
+            point.x = next;
+            point.y = (*this)(point.x);
+            next += step;
+        }
+        return data;
+    }
+
     std::vector<double> polynom_coeff;
 
 private:
@@ -67,82 +72,76 @@ private:
     }
 };
 
-bool operator==(const RandomPolynomial& polynom, std::vector<double> coeffs) {
-    if (polynom.polynom_coeff.size() != coeffs.size()) {
-        return false;
-    }
-    for (size_t i = 0; i < coeffs.size(); ++i) {
-        if(!IsEqual(polynom.polynom_coeff[i], coeffs[i])) {
-            return false;
-        }
-    }
-    return true;
-}
-
-std::vector<double> GetYFromPolynomial(const std::vector<Data>& data, const std::vector<double>& coeffs) {
-    std::vector<double> y;
-    y.reserve(data.size());
-    for (auto point : data) {
-        y.emplace_back(CalcY(coeffs, point.x));
-    }
-    return y;
-}
 
 void TestGetSolve() {
     size_t max_power = 2;
-    std::vector<Data> data(100);
-    RandomPolynomial polynom(max_power);
 
-    for(size_t i = 0; i < data.size(); ++i) {
-        data[i].x = i + 1;
-        data[i].y = polynom(data[i].x);
-    }
+    double min_x = -10;
+    double max_x = 10;
+    size_t count = 10;
+
+    RandomPolynomial polynom(max_power);
+    std::vector<Data> data = polynom.GenerateData(min_x, max_x, count);
 
     Approximator app;
     app.SetData(data);
     auto res = app.GetPolynomCoeffs(max_power);
 
     if (res) {
-        std::cout << "Result coefficients: "s << res.value() << std::endl;
+        std::cout << "Result coefficients:\n"s << res.value() << std::endl;
     } else {
         std::cout << "Solve not found:(";
     }
 
     data = app.GetData();
-    std::cout << "Source coefficients: "s << polynom.polynom_coeff << std::endl;
-    //assert(polynom == res.value());
+    std::cout << "Source coefficients:\n"s << polynom.polynom_coeff << std::endl;
     std::cout << "Source data:\n"s << data << std::endl;
-    std::cout << "Calc data:\n"s << GetYFromPolynomial(data, res.value()) << std::endl;
 
     std::cout << "SSE = "s << app.GetSumSquaredErrors() << std::endl;
 }
 
-void TestGetSolve2() {
-    std::vector<Data> data(5);
+void TestRendering() {
+    size_t max_power = 2;
 
-    for(size_t i = 0; i < data.size(); ++i) {
-        data[i].x = 1 + i;
-        data[i].y = SquareFunc(data[i].x);
-    }
+    double min_x = -10;
+    double max_x = 10;
+    size_t count = 10;
+
+    RandomPolynomial polynom(max_power);
+    std::vector<Data> data = polynom.GenerateData(min_x, max_x, count);
 
     Approximator app;
     app.SetData(data);
-    auto res = app.GetPolynomCoeffs(2);
+    auto res = app.GetPolynomCoeffs(max_power);
+
+    RenderSettings settings{
+        .width = 1000,
+        .height = 1000,
+        .padding = 10,
+        .line_width = 1,
+        .line_color = svg::Color("Black"s)
+    };
+    GraphRenderer renderer(settings);
+    svg::Document doc = renderer.Render(app.GetData());
+
+    std::ofstream out("graph_1.svg");
+    doc.Render(out);
 
     if (res) {
-        std::cout << res.value() << std::endl;
+        std::cout << "Result coefficients:\n"s << res.value() << std::endl;
     } else {
         std::cout << "Solve not found:(";
     }
 
     data = app.GetData();
+    std::cout << "Source coefficients:\n"s << polynom.polynom_coeff << std::endl;
     std::cout << "Source data:\n"s << data << std::endl;
-    std::cout << "Calc data:\n"s << GetYFromPolynomial(data, res.value()) << std::endl;
-    
+
+    std::cout << "SSE = "s << app.GetSumSquaredErrors() << std::endl;
 }
 
 int main() {
     TestGetSolve();
-    //TestGetSolve2();
+    TestRendering();
 
 }
