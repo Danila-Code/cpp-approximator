@@ -12,7 +12,7 @@ public:
         : app_{app}, renderer_{renderer} {
     }
 
-    void Render(std::ostream& out) const;
+    void RenderGraph(std::ostream& out) const;
 private:
     Approximator& app_;
     GraphRenderer& renderer_;

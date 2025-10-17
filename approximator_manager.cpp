@@ -1,5 +1,7 @@
 #include "approximator_manager.h"
 
-void ApproximatorManager::Render(std::ostream& out) const {
+void ApproximatorManager::RenderGraph(std::ostream& out) const {
+    auto data = app_.GetData();
 
+    
 }

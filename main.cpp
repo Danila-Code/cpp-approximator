@@ -85,10 +85,10 @@ void TestGetSolve() {
 
     Approximator app;
     app.SetData(data);
-    auto res = app.GetPolynomCoeffs(max_power);
+    auto res = app.GetPolynom(max_power);
 
     if (res) {
-        std::cout << "Result coefficients:\n"s << res.value() << std::endl;
+        std::cout << "Result coefficients:\n"s << res.value().coeffs << std::endl;
     } else {
         std::cout << "Solve not found:(";
     }
@@ -112,7 +112,7 @@ void TestRendering() {
 
     Approximator app;
     app.SetData(data);
-    auto res = app.GetPolynomCoeffs(max_power);
+    auto res = app.GetPolynom(max_power);
 
     RenderSettings settings{
         .width = 1000,
@@ -128,7 +128,7 @@ void TestRendering() {
     doc.Render(out);
 
     if (res) {
-        std::cout << "Result coefficients:\n"s << res.value() << std::endl;
+        std::cout << "Result coefficients:\n"s << res.value().coeffs << std::endl;
     } else {
         std::cout << "Solve not found:(";
     }

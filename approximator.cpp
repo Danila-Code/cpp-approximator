@@ -2,8 +2,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cmath>
-#include <numeric>
 
 // Least squares approximation of max_power degree polynomials
 
@@ -111,41 +109,32 @@ void Approximator::SetData(std::vector<Data>& data) {
 }
 
 // returns coefficients of the polynomial
-std::optional<Coeffs> Approximator::GetPolynomCoeffs(size_t polynom_degree) {
-    if (polynom_coeffs_ && polynom_degree_ == polynom_degree) {
-        return polynom_coeffs_;
+std::optional<Polynomial> Approximator::GetPolynom(size_t polynom_degree) {
+    if (polynom_ && polynom_degree_ == polynom_degree) {
+        return polynom_;
     }
     polynom_degree_ = polynom_degree;
     CalcPolynomCoeffs();
 
-    return polynom_coeffs_;
+    return polynom_;
 }
 
 // method calculate polynomial coefficient for data_ and set polynom_coeff_
 void Approximator::CalcPolynomCoeffs() {
-    polynom_coeffs_ = GetEquationSystem(data_, polynom_degree_).GetSolve();
-}
-
-// calc polynomial func value y(x)
-// polynom_coeffs_ must contain values
-double Approximator::CalcPolynomialValue(double x) const {
-    int exp = 0;
-    return std::accumulate((*polynom_coeffs_).begin(), (*polynom_coeffs_).end(), 0.0,
-        [&x, &exp](double init, double value) {
-            double res = init + value * pow(x, exp);
-            ++exp;
-            return res;
-    });
+    auto res = GetEquationSystem(data_, polynom_degree_).GetSolve();
+    if (res) {
+        polynom_ = Polynomial(res.value());
+    }
 }
 
 // return sum of squared errors
 double Approximator::GetSumSquaredErrors() const {
-    if (!polynom_coeffs_) {
+    if (!polynom_) {
         return 0;
     }
     return std::accumulate(data_.begin(), data_.end(), 0,
         [this](double init, Data point) {
-            return init + pow(point.y - CalcPolynomialValue(point.x), 2);
+            return init + pow(point.y - (*polynom_)(point.x), 2);
     });
 }
 
