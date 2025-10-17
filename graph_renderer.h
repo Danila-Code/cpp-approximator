@@ -89,7 +89,8 @@ public:
     explicit GraphRenderer(const RenderSettings& settings) : settings_{settings} {
     }
 
-    svg::Document Render(const std::vector<Data>& points) const;
+    svg::Document Render(const std::vector<Data>& source_points,
+                         const std::vector<Data>& result_points) const;
 
 private:
     RenderSettings settings_;

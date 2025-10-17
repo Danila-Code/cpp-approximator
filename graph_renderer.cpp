@@ -1,7 +1,8 @@
 #include "graph_renderer.h"
 
-svg::Document GraphRenderer::Render(const std::vector<Data>& points) const {
-    ScreenProjector proj(points, settings_);
+svg::Document GraphRenderer::Render(const std::vector<Data>& source_points,
+                                    const std::vector<Data>& result_points) const {
+    ScreenProjector proj(result_points, settings_);
 
     svg::Document doc;
     svg::Polyline graph;
@@ -12,7 +13,7 @@ svg::Document GraphRenderer::Render(const std::vector<Data>& points) const {
          .SetStrokeLineJoin(svg::StrokeLineJoin::ROUND)
          .SetFillColor(svg::NoneColor);
 
-    for (auto point : points) {
+    for (auto point : result_points) {
         graph.AddPoint(proj(point));
     }
     doc.Add(graph);

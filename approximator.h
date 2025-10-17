@@ -42,6 +42,8 @@ public:
 
     // returns coefficients of the polynomial if the approximation is successful
     // the coefficients follow starting from a0 to an
+    Polynomial GetPolynom() const;
+    // returns coefficients of the polynomial
     std::optional<Polynomial> GetPolynom(size_t polynom_degree);
     
     // return sum of squared errors

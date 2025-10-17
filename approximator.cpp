@@ -109,6 +109,10 @@ void Approximator::SetData(std::vector<Data>& data) {
 }
 
 // returns coefficients of the polynomial
+Polynomial Approximator::GetPolynom() const {
+    return polynom_.value();
+}
+// returns coefficients of the polynomial
 std::optional<Polynomial> Approximator::GetPolynom(size_t polynom_degree) {
     if (polynom_ && polynom_degree_ == polynom_degree) {
         return polynom_;
