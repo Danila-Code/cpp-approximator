@@ -14,6 +14,9 @@ public:
 
     void RenderGraph(std::ostream& out) const;
 private:
+
+    std::vector<Data> GenerateData() const;
+
     Approximator& app_;
     GraphRenderer& renderer_;
 };

@@ -5,7 +5,7 @@
 #include <numeric>
 #include <random>
 
-#include "approximator.h"
+#include "approximator_manager.h"
 #include "graph_renderer.h"
 
 using namespace std::literals;
@@ -122,10 +122,10 @@ void TestRendering() {
         .line_color = svg::Color("Black"s)
     };
     GraphRenderer renderer(settings);
-    svg::Document doc = renderer.Render(app.GetData());
+    ApproximatorManager app_manager(app, renderer);
 
     std::ofstream out("graph_1.svg");
-    doc.Render(out);
+    app_manager.RenderGraph(out);
 
     if (res) {
         std::cout << "Result coefficients:\n"s << res.value().coeffs << std::endl;
