@@ -93,5 +93,13 @@ public:
                          const std::vector<Data>& result_points) const;
 
 private:
+    // add source data to the svg doc
+    void AddSourcePoints(svg::Document& doc, const ScreenProjector& proj,
+        const std::vector<Data>& source_points) const;
+
+    // adds a polyline to the doc from the points of the polynomial
+    void AddGraphPolyline(svg::Document& doc, const ScreenProjector& proj,
+        const std::vector<Data>& result_points) const;
+
     RenderSettings settings_;
 };
