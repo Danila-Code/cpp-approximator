@@ -11,7 +11,7 @@ void ApproximatorManager::RenderGraph(std::ostream& out) const {
     double max_x = iter_max->x;
     double padding = (max_x - min_x) * 0.1;
 
-    auto result_points = GenerateData(min_x - padding, max_x + padding, 20);
+    auto result_points = GenerateData(min_x - padding, max_x + padding, 1000);
 
     renderer_.Render(source_points, result_points).Render(out);
 }

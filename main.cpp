@@ -103,8 +103,8 @@ void TestGetSolve() {
 void TestRendering() {
     size_t max_power = 2;
 
-    double min_x = -10;
-    double max_x = 10;
+    double min_x = -5;
+    double max_x = 5;
     size_t count = 10;
 
     RandomPolynomial polynom(max_power);
@@ -141,7 +141,7 @@ void TestRendering() {
 }
 
 int main() {
-    TestGetSolve();
+    //TestGetSolve();
     TestRendering();
 
 }
