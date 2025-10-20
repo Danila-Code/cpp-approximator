@@ -114,7 +114,7 @@ void TestRendering() {
     auto res = app.GetPolynom(max_power);
 
     renderer::RenderSettings settings{
-        .width = 1000,
+        .width = 300,
         .height = 1000,
         .padding = 10,
         .line_width = 1,

@@ -202,6 +202,24 @@ private:
     std::optional<StrokeLineJoin> stroke_line_join_;
 };
 
+
+/*
+ * Класс Line моделирует элемент <line> для отображения линии
+ * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/line
+ */
+class Line final : public Object, public PathProps<Line> {
+public:
+    Line& SetPoint1(Point point);
+    Line& SetPoint2(Point point);
+
+private:
+    void RenderObject(const RenderContext& context) const override;
+
+    Point point1_;
+    Point point2_;
+
+};
+
 /*
  * Класс Circle моделирует элемент <circle> для отображения круга
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle
