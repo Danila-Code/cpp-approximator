@@ -6,9 +6,10 @@
 #include <iostream>
 
 
+
 class ApproximatorManager {
 public:
-    explicit ApproximatorManager(Approximator& app, GraphRenderer& renderer)
+    explicit ApproximatorManager(Approximator& app, renderer::GraphRenderer& renderer)
         : app_{app}, renderer_{renderer} {
     }
 
@@ -18,5 +19,5 @@ private:
     std::vector<Data> GenerateData(double min_x, double max_x, size_t count) const;
 
     Approximator& app_;
-    GraphRenderer& renderer_;
+    renderer::GraphRenderer& renderer_;
 };

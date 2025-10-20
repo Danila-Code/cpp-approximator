@@ -27,8 +27,8 @@ private:
     // solve matrix equation by the Gauss method
     void SolveByTheGauss() const;
 
-    // matrix_ stores vectors with columns elements
-    // matrix_[0] - match to the first column
+    // matrix_ stores vectors with raws elements
+    // matrix_[0] - match to the first raw
     mutable Matrix matrix_;
     mutable std::vector<double> right_part_;
 };
