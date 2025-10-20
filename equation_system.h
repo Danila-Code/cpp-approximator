@@ -5,6 +5,8 @@
 
 using Matrix = std::vector<std::vector<double>>;
 
+// return algebraic addition for element in matrix[row][col]
+double CalcAlgebraicAddition(size_t row, size_t col, const Matrix& matrix);
 // calc determinant of matrix
 double GetDeterminant(const Matrix& matrix);
 // return inverse matrix
@@ -28,7 +30,7 @@ private:
     void SolveByTheGauss() const;
 
     // matrix_ stores vectors with raws elements
-    // matrix_[0] - match to the first raw
+    // matrix_[0] match to the first raw
     mutable Matrix matrix_;
     mutable std::vector<double> right_part_;
 };

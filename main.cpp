@@ -64,8 +64,8 @@ private:
         std::vector<double> vec(size + 1);
         std::for_each(vec.begin(), vec.end(),
             [&dis, &gen](double& item) {
-                //item = static_cast<int>(dis(gen));
-                item = dis(gen);
+                item = static_cast<int>(dis(gen));
+                //item = dis(gen);
         });
         polynom_coeff = std::move(vec);
     }
