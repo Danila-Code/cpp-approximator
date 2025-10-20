@@ -1,50 +1,6 @@
 #include "equation_system.h"
 
-#include <algorithm>
 #include <cassert>
-#include <deque>
-
-// calc determinant of matrix recursevly
-double GetDeterminantRec(size_t current_row, std::deque<size_t> ignore_cols, const Matrix& matrix) {
-    size_t order = matrix.size() - current_row;  // order of matrix;
-    if (order == 1) {
-        return matrix[0][0];
-    }
-
-    if (order == 2) {
-        size_t col1;
-        for (col1 = 0; col1 < matrix.size(); ++col1) {
-            if (ignore_cols.empty() || std::find(ignore_cols.begin(), ignore_cols.end(), col1) == ignore_cols.end()) {
-                break;
-            }
-        }
-        size_t col2;
-        for (col2 = col1 + 1; col2 < matrix.size(); ++col2) {
-            if (ignore_cols.empty() || std::find(ignore_cols.begin(), ignore_cols.end(), col2) == ignore_cols.end()) {
-                break;
-            }
-        }
-        return matrix[current_row][col1] * matrix[current_row + 1][col2] -
-            matrix[current_row][col2] * matrix[current_row + 1][col1];
-    }
-
-    double det = 0;
-    for (size_t i = 0; i < matrix.size(); ++i) {
-        if (!ignore_cols.empty() && std::find(ignore_cols.begin(), ignore_cols.end(), i) != ignore_cols.end()) {
-            continue;
-        }
-        int one_coef = (current_row + i) % 2 ? -1 : 1; //  -1 in pow of sum current row and current column
-        auto new_ignore_cols(ignore_cols);
-        new_ignore_cols.push_back(i);
-        det += one_coef * matrix[current_row][i] * GetDeterminantRec(current_row + 1, new_ignore_cols, matrix);
-    }
-    return det;
-}
-
-// calc determinant of matrix
-double GetDeterminant(const Matrix& matrix) {
-    return GetDeterminantRec(0, {}, matrix);
-}
 
 // return algebraic addition for element in matrix[row][col]
 double CalcAlgebraicAddition(size_t row, size_t col, const Matrix& matrix) {
@@ -67,6 +23,24 @@ double CalcAlgebraicAddition(size_t row, size_t col, const Matrix& matrix) {
     }
     int coef = (row + col) % 2 == 0 ? 1 : -1;
     return coef * GetDeterminant(minor_matrix);
+}
+
+// calc determinant of matrix
+double GetDeterminant(const Matrix& matrix) {
+    size_t order = matrix.size();  // order of matrix;
+    if (order == 1) {
+        return matrix[0][0];
+    }
+
+    if (order == 2) {
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+    }
+
+    double det = 0;
+    for (size_t i = 0; i < matrix.size(); ++i) {
+        det += matrix[0][i] * CalcAlgebraicAddition(0, i, matrix);
+    }
+    return det;
 }
 
 // return inverse matrix
@@ -98,7 +72,7 @@ std::vector<double> MultiplyMatrix(const Matrix& matrix, const std::vector<doubl
 }
 
 // ********** methods of class EquationSystem  ************
-    // solve matrix equation by the Gauss method
+// solve matrix equation by the Gauss method
 void EquationSystem::SolveByTheGauss() const {
     size_t size = matrix_.size();
 
@@ -138,13 +112,11 @@ std::optional<std::vector<double>> EquationSystem::GetSolve() const {
         return std::nullopt;
     }
 
-    //SolveByTheGauss();
+    SolveByTheGauss();
+    res = right_part_;
     
-    //res = right_part_;
-    
-    
-    Matrix inverse_matrix = GetInverseMatrix(matrix_, det);
-    res = MultiplyMatrix(inverse_matrix, right_part_);
+    //Matrix inverse_matrix = GetInverseMatrix(matrix_, det);
+    //res = MultiplyMatrix(inverse_matrix, right_part_);
 
     return res;
     //return std::move(right_part_);
