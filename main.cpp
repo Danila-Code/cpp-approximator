@@ -1,4 +1,3 @@
-#include <cassert>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -114,14 +113,16 @@ void TestRendering() {
     app.SetData(data);
     auto res = app.GetPolynom(max_power);
 
-    RenderSettings settings{
+    renderer::RenderSettings settings{
         .width = 1000,
         .height = 1000,
         .padding = 10,
         .line_width = 1,
-        .line_color = svg::Color("Black"s)
+        .radius = 3,
+        .line_color = svg::Color("Black"s),
+        .circle_color = svg::Color("Red"s)
     };
-    GraphRenderer renderer(settings);
+    renderer::GraphRenderer renderer(settings);
     ApproximatorManager app_manager(app, renderer);
 
     std::ofstream out("graph_1.svg");

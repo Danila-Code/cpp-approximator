@@ -1,14 +1,14 @@
 #include "graph_renderer.h"
 
+namespace renderer {
 // add source data to the svg doc
 void GraphRenderer::AddSourcePoints(svg::Document& doc, const ScreenProjector& proj,
         const std::vector<Data>& points) const {
-    using namespace std::literals;
-
     for (auto point : points) {
-        doc.Add(svg::Circle().SetCenter(proj(point))
-                             .SetRadius(3)
-                             .SetFillColor("Red"s));
+        doc.Add(svg::Circle()
+            .SetCenter(proj(point))
+            .SetRadius(settings_.radius)
+            .SetFillColor(settings_.circle_color));
     }
 }
 
@@ -40,3 +40,4 @@ svg::Document GraphRenderer::Render(const std::vector<Data>& source_points,
 
     return doc;
 }
+}  // namespace renderer

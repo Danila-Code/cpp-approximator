@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <vector>
 
+namespace renderer {
 
 struct RenderSettings {
     // picture size
@@ -13,9 +14,12 @@ struct RenderSettings {
     double height{};
 
     double padding{};  // padding from edges
+    
     double line_width{};  // width of line
+    double radius{};  // circle radius
 
     svg::Color line_color{};  // color of line
+    svg::Color circle_color{};  // color of circle
 };
 
 namespace {
@@ -103,3 +107,4 @@ private:
 
     RenderSettings settings_;
 };
+}  // namespace renderer
