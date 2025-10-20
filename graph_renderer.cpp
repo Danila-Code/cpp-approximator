@@ -29,12 +29,28 @@ void GraphRenderer::AddGraphPolyline(svg::Document& doc, const ScreenProjector& 
     doc.Add(graph);
 }
 
+// add lines of coordinates axis
+void GraphRenderer::AddAxis(svg::Document& doc,
+                            const ScreenProjector& proj,
+                            const std::vector<Data>& points) const {
+    /*if (points.empty()) {
+        return;
+    }
+    if (points.begin()->x <= 0 && (points.end() - 1)->x >= 0) {
+        // draw y-axsis in coord x = 0
+    }*/
+
+}
+
 svg::Document GraphRenderer::Render(const std::vector<Data>& source_points,
                                     const std::vector<Data>& result_points) const {
     ScreenProjector proj(result_points, settings_);
 
     svg::Document doc;
 
+    if (settings_.draw_axis) {
+        AddAxis(doc, proj, result_points);
+    }
     AddGraphPolyline(doc, proj, result_points);
     AddSourcePoints(doc, proj, source_points);
 

@@ -104,8 +104,26 @@ void Object::Render(const RenderContext& context) const {
     context.out << std::endl;
 }
 
-// ---------- Circle ------------------
+// ---------- Line --------------------
+Line& Line::SetPoint1(Point point) {
+    point1_ = point;
+    return *this;
+}
 
+Line& Line::SetPoint2(Point point) {
+    point2_ = point;
+    return *this;
+}
+
+void Line::RenderObject(const RenderContext& context) const {
+    auto& out = context.out;
+    out << "<line x1=\""sv << point1_.x << "\" y1=\""sv << point1_.y <<"\" "sv;
+    out << "x2=\""sv << point2_.x << "\" y2=\""sv << point2_.y <<"\" "sv;
+    RenderAttrs(out);
+    out << "/>"sv;
+}
+
+// ---------- Circle ------------------
 Circle& Circle::SetCenter(Point center)  {
     center_ = center;
     return *this;

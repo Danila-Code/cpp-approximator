@@ -20,6 +20,8 @@ struct RenderSettings {
 
     svg::Color line_color{};  // color of line
     svg::Color circle_color{};  // color of circle
+
+    bool draw_axis = true;  // draw coordinates axis or not
 };
 
 namespace {
@@ -104,6 +106,9 @@ private:
     // adds a polyline to the doc from the points of the polynomial
     void AddGraphPolyline(svg::Document& doc, const ScreenProjector& proj,
         const std::vector<Data>& result_points) const;
+
+    // add lines of coordinates axis
+    void AddAxis(svg::Document& doc, const ScreenProjector& proj, const std::vector<Data>& points) const;
 
     RenderSettings settings_;
 };
