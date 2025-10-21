@@ -72,17 +72,22 @@ public:
         } else if (height_zoom_coef) {
             zoom_coef_ = *height_zoom_coef;
         }
+        // to make objects centered
+        x_offset_ = (settings.width - 2 * settings.padding - (max_x - min_x_) * zoom_coef_) / 2;
+        y_offset_ = (settings.height - 2 * settings.padding - (max_y - min_y_) * zoom_coef_) / 2;
     }
 
     // convert to screen coordinates
     svg::Point operator()(Data point) const {
         return {
-            (point.x - min_x_) * zoom_coef_ + padding_,
-            (point.y - min_y_) * zoom_coef_ + padding_
+            (point.x - min_x_) * zoom_coef_ + padding_ + x_offset_,
+            (point.y - min_y_) * zoom_coef_ + padding_ + y_offset_
         };
     }
 
 private:
+    double x_offset_;  // x offset for centering
+    double y_offset_;  // y offset for centering
     double min_x_;
     double min_y_;
     double padding_;

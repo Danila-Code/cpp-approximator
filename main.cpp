@@ -107,6 +107,8 @@ void TestRendering() {
     size_t count = 10;
 
     RandomPolynomial polynom(max_power);
+    polynom.polynom_coeff = {0, 1, 1};
+
     std::vector<Data> data = polynom.GenerateData(min_x, max_x, count);
 
     Approximator app;
@@ -114,8 +116,8 @@ void TestRendering() {
     auto res = app.GetPolynom(max_power);
 
     renderer::RenderSettings settings{
-        .width = 300,
-        .height = 1000,
+        .width = 500,
+        .height = 500,
         .padding = 10,
         .line_width = 1,
         .radius = 3,

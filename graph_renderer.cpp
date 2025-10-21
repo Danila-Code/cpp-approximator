@@ -33,12 +33,56 @@ void GraphRenderer::AddGraphPolyline(svg::Document& doc, const ScreenProjector& 
 void GraphRenderer::AddAxis(svg::Document& doc,
                             const ScreenProjector& proj,
                             const std::vector<Data>& points) const {
-    /*if (points.empty()) {
-        return;
-    }
-    if (points.begin()->x <= 0 && (points.end() - 1)->x >= 0) {
-        // draw y-axsis in coord x = 0
-    }*/
+    using namespace std::literals;
+    svg::Point left(settings_.padding, settings_.height / 2);
+    svg::Point right(settings_.width - settings_.padding, settings_.height / 2);
+
+    doc.Add(svg::Line()
+                       .SetPoint1(left)
+                       .SetPoint2(right)
+                       .SetStrokeColor("Black"s)
+    );
+    svg::Point up(settings_.width / 2, settings_.padding);
+    svg::Point down(settings_.width / 2, settings_.height - settings_.padding);
+
+    doc.Add(svg::Line()
+                       .SetPoint1(up)
+                       .SetPoint2(down)
+                       .SetStrokeColor("Black"s)
+    );
+
+    // left border
+    doc.Add(svg::Line()
+                       .SetPoint1({settings_.padding,
+                                   settings_.padding})
+                       .SetPoint2({settings_.padding,
+                                   settings_.height - settings_.padding})
+                       .SetStrokeColor("Black"s)
+    );
+    // right border
+    doc.Add(svg::Line()
+                       .SetPoint1({settings_.width - settings_.padding,
+                                   settings_.padding})
+                       .SetPoint2({settings_.width - settings_.padding,
+                                   settings_.height - settings_.padding})
+                       .SetStrokeColor("Black"s)
+    );
+    // top border
+    doc.Add(svg::Line()
+                       .SetPoint1({settings_.padding,
+                                   settings_.padding})
+                       .SetPoint2({settings_.width - settings_.padding,
+                                   settings_.padding})
+                       .SetStrokeColor("Black"s)
+    );
+    // bottom border
+    doc.Add(svg::Line()
+                       .SetPoint1({settings_.padding,
+                                   settings_.height - settings_.padding})
+                       .SetPoint2({settings_.width - settings_.padding,
+                                   settings_.height - settings_.padding})
+                       .SetStrokeColor("Black"s)
+    );
 
 }
 
