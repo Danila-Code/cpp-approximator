@@ -4,7 +4,7 @@ void ApproximatorManager::RenderGraph(std::ostream& out) const {
     auto source_points = app_.GetData();
     auto [iter_min, iter_max] = std::minmax_element(source_points.begin(), source_points.end(),
         [](Data lhs, Data rhs) {
-            return lhs.x < rhs.y;
+            return lhs.x < rhs.x;
     });
 
     double min_x = iter_min->x;

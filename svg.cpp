@@ -118,7 +118,7 @@ Line& Line::SetPoint2(Point point) {
 void Line::RenderObject(const RenderContext& context) const {
     auto& out = context.out;
     out << "<line x1=\""sv << point1_.x << "\" y1=\""sv << point1_.y <<"\" "sv;
-    out << "x2=\""sv << point2_.x << "\" y2=\""sv << point2_.y <<"\" "sv;
+    out << "x2=\""sv << point2_.x << "\" y2=\""sv << point2_.y <<"\""sv;
     RenderAttrs(out);
     out << "/>"sv;
 }
