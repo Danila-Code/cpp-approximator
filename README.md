@@ -1,20 +1,45 @@
-# Approximator
+# Аппроксиматор
 
-## Description
-The Approximator allows you to describe a set of data pairs (x, y) using the functional dependence of y on x in the form of a polynomial dependence of a given degree. That is, the program approximates the data by a polynomial.
+## Описание
+Аппроксиматор позволяет описать (аппроксимировать) входные данные с помощью полинома заданной степени. Входные данные это массив пар x и y, причём предполагается, что y зависит от x. С помощью аппроксиматора можно выразить зависимости различных физических величин от температуры (например, зависимоть кинематической вязкости, плотности, теплопроводности вещества), чтобы в дальнейшем использовать их в качестве функций в программах для тепловых расчётов. 
 
-## Features
-* The least squares method is used for approximation
-* The system of linear equations is solved by the Gauss method
-* The result of the work is displayed as coefficients of a polynomial, and a graph in svg format
+## Технологии:
+* C++
+* STL
+* ООП
+* SVG
+* CMake
 
-### Using technologies
-C++, STL, SVG graphics, object-oriented programming.
+## В Аппроксиматоре реализованы:
+* отдельный класс EquationSystem, который описывает систему уравнений в матричном виде
+* класс Approximator, который хранит входные данные и составляет систему уравнений для нахождения полинома
+* класс GraphRenderer для отрисовки графика полинома в формате SVG
+* класс ApproximatorManager, который управляет остальными классами
 
-### System requirements
-C++ 17, STL
+## Будущие изменения:
+* графический интерфейс
+* возможность интерполировать данные
+* возможность генерировать код функций y(x) на разных языках программирования
 
-## In the future I plan to add
-* a graphical interface
-* the ability to interpolate data
-* the ability generate code for the function y(x)
+## Особенности Аппроксиматора:
+* программа разбита на отдельные классы-модули ограниченной функциональности
+* программа использует расширенную библиотеку SVG (svg.h, svg.cpp), разработанную для Транспортного справочника
+* для аппроксимация производится с помощью метода наименьших квадратов
+* для решения системы уравнений используется метод Гаусса
+* в результате работы программа выдаёт коэффициенты полинома и строку в формате SVG
+
+## Запуск проекта
+1. Скачайте файлы из текущего репозитория.
+2. Создайте в корневой папке проекта папку "build" для сборки проекта, перейдите в неё в командной строке и запустите cmake:\
+	`cmake ../ -DCMAKE_BUILD_TYPE=Release`\
+**если работаете с MinGw, укажите дополнительный параметр -G "MinGW Makefiles".* 
+3. Запустите сборку проекта в командной строке:\
+	`cmake --build .`\
+*Проект собран.*
+4. Чтобы работать с Аппроксиматором нужно в командной строке (находясь в папке "build" проекта) набрать:\
+	`./approximator.exe <"входной файл данных JSON" >"выходной файл ответов"`
+
+## Системные требования
+Компилятор С++, С++17, CMake 3.8
+
+
