@@ -6,6 +6,7 @@
 
 #include "approximator_manager.h"
 #include "graph_renderer.h"
+#include "json_reader.h"
 
 using namespace std::literals;
 
@@ -71,34 +72,6 @@ private:
     }
 };
 
-
-void TestGetSolve() {
-    size_t max_power = 2;
-
-    double min_x = -10;
-    double max_x = 10;
-    size_t count = 10;
-
-    RandomPolynomial polynom(max_power);
-    std::vector<Data> data = polynom.GenerateData(min_x, max_x, count);
-
-    Approximator app;
-    app.SetData(data);
-    auto res = app.GetPolynom(max_power);
-
-    if (res) {
-        std::cout << "Result coefficients:\n"s << res.value().coeffs << std::endl;
-    } else {
-        std::cout << "Solve not found:(";
-    }
-
-    data = app.GetData();
-    std::cout << "Source coefficients:\n"s << polynom.polynom_coeff << std::endl;
-    std::cout << "Source data:\n"s << data << std::endl;
-
-    std::cout << "SSE = "s << app.GetSumSquaredErrors() << std::endl;
-}
-
 void TestRendering() {
     size_t max_power = 2;
 
@@ -112,9 +85,12 @@ void TestRendering() {
     std::vector<Data> data = polynom.GenerateData(min_x, max_x, count);
 
     Approximator app;
-    app.SetData(data);
-    auto res = app.GetPolynom(max_power);
-
+    //app.SetData(data);
+    //auto res = app.GetPolynom(max_power);
+    std::ifstream in("input.json"s);
+    JsonReader reader(in);
+    reader.SetData(app);
+    app.ApproximateData();
     renderer::RenderSettings settings{
         .width = 500,
         .height = 500,
@@ -127,14 +103,11 @@ void TestRendering() {
     renderer::GraphRenderer renderer(settings);
     ApproximatorManager app_manager(app, renderer);
 
-    std::ofstream out("graph_1.svg");
-    app_manager.RenderGraph(out);
+    std::ofstream out("graph_1.json");
+    reader.ReturnResult(app_manager, out);
+    //app_manager.RenderGraph(out);
 
-    if (res) {
-        std::cout << "Result coefficients:\n"s << res.value().coeffs << std::endl;
-    } else {
-        std::cout << "Solve not found:(";
-    }
+    std::cout << "Result coefficients:\n"s << app.GetPolynom().ToString() << std::endl;
 
     data = app.GetData();
     std::cout << "Source coefficients:\n"s << polynom.polynom_coeff << std::endl;
@@ -144,7 +117,24 @@ void TestRendering() {
 }
 
 int main() {
-    //TestGetSolve();
-    TestRendering();
+    //TestRendering();
 
+    Approximator app;
+    JsonReader reader(std::cin);
+    reader.SetData(app);
+    app.ApproximateData();
+
+    renderer::RenderSettings settings{
+        .width = 500,
+        .height = 500,
+        .padding = 10,
+        .line_width = 1,
+        .radius = 3,
+        .line_color = svg::Color("Black"s),
+        .circle_color = svg::Color("Red"s)
+    };
+    renderer::GraphRenderer r(settings);
+    
+    ApproximatorManager manager(app, r);
+    reader.ReturnResult(manager, std::cout);
 }

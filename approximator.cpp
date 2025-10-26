@@ -104,23 +104,22 @@ EquationSystem GetEquationSystem(const std::vector<Data>& data, int max_power) {
 }  // namespace
 
 // sets the data to be approximated
-void Approximator::SetData(std::vector<Data>& data) {
+void Approximator::SetData(std::vector<Data> data) {
     data_ = std::move(data);
 }
 
-// returns coefficients of the polynomial
+// set polenom degree
+void Approximator::SetPolynomDegree(size_t degree) {
+    polynom_degree_ = degree;
+}
+
 Polynomial Approximator::GetPolynom() const {
     return polynom_.value();
 }
-// returns coefficients of the polynomial
-std::optional<Polynomial> Approximator::GetPolynom(size_t polynom_degree) {
-    if (polynom_ && polynom_degree_ == polynom_degree) {
-        return polynom_;
-    }
-    polynom_degree_ = polynom_degree;
-    CalcPolynomCoeffs();
 
-    return polynom_;
+// returns coefficients of the polynomial
+void Approximator::ApproximateData() {
+    CalcPolynomCoeffs();
 }
 
 // method calculate polynomial coefficient for data_ and set polynom_coeff_
