@@ -1,11 +1,12 @@
 #pragma once
 
+#include <cstddef>
 #include <iostream>
 #include <map>
 #include <string>
-#include <vector>
-#include <cstddef>
 #include <variant>
+#include <vector>
+
 
 namespace json {
 
@@ -20,15 +21,13 @@ public:
     using runtime_error::runtime_error;
 };
 
-class Node final 
-    : private std::variant<std::nullptr_t, int, double, bool, std::string, Array, Dict> {
+class Node final : private std::variant<std::nullptr_t, int, double, bool, std::string, Array, Dict> {
 public:
     using variant::variant;
     using variant::operator=;
     using Value = variant;
 
-    Node(Value&& value) : Value(std::move(value)) {
-    }
+    Node(Value&& value) : Value(std::move(value)) {}
 
     // Методы сообщают, хранится ли внутри значение некоторого типа:
     bool IsNull() const {
@@ -58,42 +57,42 @@ public:
 
     // Методы возвращают хранящиеся внутри Node значение заданного типа
     int AsInt() const {
-        if(!IsInt()) {
+        if (!IsInt()) {
             throw std::logic_error("The node type is not int");
         }
         return std::get<int>(*this);
     }
     double AsDouble() const {
-        if(!IsDouble()) {
+        if (!IsDouble()) {
             throw std::logic_error("The node type is not double");
-        } 
+        }
         return IsPureDouble() ? std::get<double>(*this) : static_cast<double>(std::get<int>(*this));
     }
     bool AsBool() const {
-        if(!IsBool()) {
+        if (!IsBool()) {
             throw std::logic_error("The node type is not bool");
-        } 
+        }
         return std::get<bool>(*this);
     }
     const std::string& AsString() const {
-        if(!IsString()) {
+        if (!IsString()) {
             throw std::logic_error("The node type is not string");
-        } 
+        }
         return std::get<std::string>(*this);
     }
     const Array& AsArray() const {
-        if(!IsArray()) {
+        if (!IsArray()) {
             throw std::logic_error("The node type is not Array");
-        } 
+        }
         return std::get<Array>(*this);
     }
     const Dict& AsMap() const {
-        if(!IsMap()) {
+        if (!IsMap()) {
             throw std::logic_error("The node type is not map");
-        } 
+        }
         return std::get<Dict>(*this);
     }
-    
+
     // Методы сравнения двух экземпляров Node
     bool operator==(const Node& other) const noexcept {
         return this->GetValue() == other.GetValue();
@@ -113,8 +112,7 @@ public:
 
 class Document {
 public:
-    explicit Document(Node root) : root_(move(root)) {
-    }
+    explicit Document(Node root) : root_(move(root)) {}
 
     const Node& GetRoot() const {
         return root_;
@@ -127,6 +125,7 @@ public:
     bool operator!=(const Document& other) const {
         return !(*this == other);
     }
+
 private:
     Node root_;
 };
@@ -136,5 +135,4 @@ Document Load(std::istream& input);
 
 // Вывод json-документа в поток
 void Print(const Document& doc, std::ostream& output);
-
 }  // namespace json

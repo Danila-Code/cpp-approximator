@@ -3,11 +3,11 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <string>
 #include <optional>
-#include <cstdint>
+#include <string>
 #include <variant>
 #include <vector>
+
 
 namespace svg {
 
@@ -34,8 +34,7 @@ inline void RenderAttr(std::ostream& out, std::string_view name, const AttrType&
 }
 
 template <typename AttrType>
-inline void RenderOptionalAttr(std::ostream& out, std::string_view name, 
-                               const std::optional<AttrType>& value) {
+inline void RenderOptionalAttr(std::ostream& out, std::string_view name, const std::optional<AttrType>& value) {
     if (value) {
         RenderAttr(out, name, *value);
     }
@@ -47,8 +46,7 @@ inline const std::string NoneColor{"none"};
 
 struct Rgb {
     Rgb() = default;
-    Rgb(uint8_t r, uint8_t g, uint8_t b) : red{r}, green{g}, blue{b} {
-    }
+    Rgb(uint8_t r, uint8_t g, uint8_t b) : red{r}, green{g}, blue{b} {}
 
     uint8_t red{};
     uint8_t green{};
@@ -58,8 +56,7 @@ struct Rgb {
 struct Rgba : public Rgb {
     Rgba() : Rgb() {}
 
-    Rgba(uint8_t r, uint8_t g, uint8_t b, double op) : Rgb(r, g, b), opacity{op} {
-    }
+    Rgba(uint8_t r, uint8_t g, uint8_t b, double op) : Rgb(r, g, b), opacity{op} {}
 
     double opacity = 1.0;
 };
@@ -95,10 +92,7 @@ std::ostream& operator<<(std::ostream& out, const Color& color);
 
 struct Point {
     Point() = default;
-    Point(double x, double y)
-        : x(x)
-        , y(y) {
-    }
+    Point(double x, double y) : x(x), y(y) {}
     double x = 0;
     double y = 0;
 };
@@ -108,15 +102,10 @@ struct Point {
  * Хранит ссылку на поток вывода, текущее значение и шаг отступа при выводе элемента
  */
 struct RenderContext {
-    RenderContext(std::ostream& out)
-        : out(out) {
-    }
+    RenderContext(std::ostream& out) : out(out) {}
 
-    RenderContext(std::ostream& out, int indent_step, int indent = 0)
-        : out(out)
-        , indent_step(indent_step)
-        , indent(indent) {
-    }
+    RenderContext(std::ostream& out, int indent_step, int indent = 0) :
+        out(out), indent_step(indent_step), indent(indent) {}
 
     RenderContext Indented() const {
         return {out, indent_step, indent + indent_step};
@@ -202,7 +191,6 @@ private:
     std::optional<StrokeLineJoin> stroke_line_join_;
 };
 
-
 /*
  * Класс Line моделирует элемент <line> для отображения линии
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/line
@@ -217,7 +205,6 @@ private:
 
     Point point1_;
     Point point2_;
-
 };
 
 /*
@@ -298,7 +285,7 @@ public:
         AddPtr(std::make_unique<Obj>(std::move(object)));
     };
 
-    virtual void AddPtr(std::unique_ptr<Object>&& object) = 0; 
+    virtual void AddPtr(std::unique_ptr<Object>&& object) = 0;
     virtual ~ObjectContainer() = default;
 };
 
@@ -319,5 +306,4 @@ public:
 private:
     std::vector<std::unique_ptr<Object>> objects_;
 };
-
 }  // namespace svg

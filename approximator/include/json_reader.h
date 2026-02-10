@@ -17,7 +17,5 @@ private:
     // return polynomial degree from json dictionary
     double GetPolynomDegree() const;
 
-
     json::Dict dict_;
-
 };

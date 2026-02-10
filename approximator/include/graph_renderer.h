@@ -1,10 +1,11 @@
 #pragma once
 
+#include <algorithm>
+#include <vector>
+
 #include "approximator.h"
 #include "svg.h"
 
-#include <algorithm>
-#include <vector>
 
 namespace renderer {
 
@@ -14,11 +15,11 @@ struct RenderSettings {
     double height{};
 
     double padding{};  // padding from edges
-    
-    double line_width{};  // width of line
-    double radius{};  // circle radius
 
-    svg::Color line_color{};  // color of line
+    double line_width{};  // width of line
+    double radius{};      // circle radius
+
+    svg::Color line_color{};    // color of line
     svg::Color circle_color{};  // color of circle
 
     bool draw_axis = true;  // draw coordinates axis or not
@@ -33,24 +34,22 @@ inline bool IsZero(double value) {
 // class convert graph coordinates to screen coordinates
 class ScreenProjector {
 public:
-    explicit ScreenProjector(const std::vector<Data>& points, const RenderSettings& settings)
-            : padding_{settings.padding} {
+    explicit ScreenProjector(const std::vector<Data>& points, const RenderSettings& settings) :
+        padding_{settings.padding} {
         if (!points.size()) {
             return;
         }
 
         // find points with min and max x ccordinate
-        const auto [iter_left, iter_right] = std::minmax_element(points.begin(), points.end(),
-            [](Data lhs, Data rhs) {
-                return lhs.x < rhs.x;
+        const auto [iter_left, iter_right] = std::minmax_element(points.begin(), points.end(), [](Data lhs, Data rhs) {
+            return lhs.x < rhs.x;
         });
         min_x_ = iter_left->x;
-        const double max_x = iter_right->x; 
+        const double max_x = iter_right->x;
 
         // find points with min and max y ccordinate
-        const auto [iter_bottom, iter_top] = std::minmax_element(points.begin(), points.end(),
-            [](Data lhs, Data rhs) {
-                return lhs.y < rhs.y;
+        const auto [iter_bottom, iter_top] = std::minmax_element(points.begin(), points.end(), [](Data lhs, Data rhs) {
+            return lhs.y < rhs.y;
         });
         min_y_ = iter_bottom->y;
         const double max_y = iter_top->y;
@@ -79,10 +78,8 @@ public:
 
     // convert to screen coordinates
     svg::Point operator()(Data point) const {
-        return {
-            (point.x - min_x_) * zoom_coef_ + padding_ + x_offset_,
-            (point.y - min_y_) * zoom_coef_ + padding_ + y_offset_
-        };
+        return {(point.x - min_x_) * zoom_coef_ + padding_ + x_offset_,
+                (point.y - min_y_) * zoom_coef_ + padding_ + y_offset_};
     }
 
 private:
@@ -97,20 +94,18 @@ private:
 
 class GraphRenderer {
 public:
-    explicit GraphRenderer(const RenderSettings& settings) : settings_{settings} {
-    }
+    explicit GraphRenderer(const RenderSettings& settings) : settings_{settings} {}
 
-    svg::Document Render(const std::vector<Data>& source_points,
-                         const std::vector<Data>& result_points) const;
+    svg::Document Render(const std::vector<Data>& source_points, const std::vector<Data>& result_points) const;
 
 private:
     // add source data to the svg doc
-    void AddSourcePoints(svg::Document& doc, const ScreenProjector& proj,
-        const std::vector<Data>& source_points) const;
+    void AddSourcePoints(svg::Document& doc, const ScreenProjector& proj, const std::vector<Data>& source_points) const;
 
     // adds a polyline to the doc from the points of the polynomial
-    void AddGraphPolyline(svg::Document& doc, const ScreenProjector& proj,
-        const std::vector<Data>& result_points) const;
+    void AddGraphPolyline(svg::Document& doc,
+                          const ScreenProjector& proj,
+                          const std::vector<Data>& result_points) const;
 
     // add lines of coordinates axis
     void AddAxis(svg::Document& doc, const ScreenProjector& proj, const std::vector<Data>& points) const;

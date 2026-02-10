@@ -1,12 +1,12 @@
 #pragma once
 
-#include "equation_system.h"
-
 #include <cmath>
 #include <numeric>
 #include <optional>
 #include <sstream>
 #include <string>
+
+#include "equation_system.h"
 
 
 namespace {
@@ -24,7 +24,6 @@ void PrintMonomial(std::ostream& out, double coef, size_t i) {
         out << coef;
     }
 }
-
 }  // namespace
 
 using Coeffs = std::vector<double>;
@@ -42,8 +41,7 @@ public:
     // coeffs_ must contain values
     double operator()(double x) const {
         int exp = 0;
-        return std::accumulate(coeffs.begin(), coeffs.end(), 0.0,
-        [&x, &exp](double init, double value) {
+        return std::accumulate(coeffs.begin(), coeffs.end(), 0.0, [&x, &exp](double init, double value) {
             double res = init + value * pow(x, exp);
             ++exp;
             return res;
@@ -55,9 +53,9 @@ public:
         using namespace std::literals;
         std::ostringstream res_stream;
         res_stream << "y(x) = "sv;
-        
+
         bool first_coeff = true;
-        
+
         for (size_t i = 0; i < coeffs.size(); ++i) {
             if (coeffs[i] == 0) {
                 continue;
@@ -89,7 +87,7 @@ public:
     void ApproximateData();
     // set polenom degree
     void SetPolynomDegree(size_t degree);
-    
+
     // return sum of squared errors
     double GetSumSquaredErrors() const;
 

@@ -20,14 +20,9 @@ std::vector<Data> JsonReader::GetSourceData() const {
     data.reserve(array.size());
 
     for (const auto& node : array) {
-
         // добавить проверки!!!!!!!!!!!!!!!!!!!!!!
 
-        data.emplace_back(Data{
-                               node.AsArray().at(0).AsDouble(),
-                               node.AsArray().at(1).AsDouble()
-                              }
-        );
+        data.emplace_back(Data{node.AsArray().at(0).AsDouble(), node.AsArray().at(1).AsDouble()});
     }
     return data;
 }

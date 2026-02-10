@@ -1,5 +1,7 @@
 #include "svg.h"
+
 #include <string_view>
+
 
 namespace svg {
 
@@ -8,63 +10,63 @@ using namespace std::literals;
 namespace detail {
 
 void StringToHtmlEncode(std::ostream& out, std::string_view text) {
-    for(auto& c : text) {
-        switch(c) {
+    for (auto& c : text) {
+        switch (c) {
             case '"':
-            out << "&quot;"sv;
-            break;
+                out << "&quot;"sv;
+                break;
             case '\'':
-            out << "&apos;"sv;
-            break;
+                out << "&apos;"sv;
+                break;
             case '<':
-            out << "&lt;"sv;
-            break;
+                out << "&lt;"sv;
+                break;
             case '>':
-            out << "&gt"sv;
-            break;
+                out << "&gt"sv;
+                break;
             case '&':
-            out << "&amp;"sv;
-            break;
+                out << "&amp;"sv;
+                break;
             default:
-            out.put(c);
-            break;
+                out.put(c);
+                break;
         }
     }
 }
 }  // namespace detail
 
 std::ostream& operator<<(std::ostream& out, StrokeLineCap stroke_line_cap) {
-    switch(stroke_line_cap) {
+    switch (stroke_line_cap) {
         case StrokeLineCap::BUTT:
-        out << "butt"sv;
-        break;
+            out << "butt"sv;
+            break;
         case StrokeLineCap::ROUND:
-        out << "round"sv;
-        break;
+            out << "round"sv;
+            break;
         case StrokeLineCap::SQUARE:
-        out << "square"sv;
-        break;
+            out << "square"sv;
+            break;
     }
     return out;
 }
 
 std::ostream& operator<<(std::ostream& out, StrokeLineJoin stroke_line_join) {
-    switch(stroke_line_join) {
+    switch (stroke_line_join) {
         case StrokeLineJoin::ARCS:
-        out << "arcs"sv;
-        break;
+            out << "arcs"sv;
+            break;
         case StrokeLineJoin::BEVEL:
-        out << "bevel"sv;
-        break;
+            out << "bevel"sv;
+            break;
         case StrokeLineJoin::MITER:
-        out << "miter"sv;
-        break;
+            out << "miter"sv;
+            break;
         case StrokeLineJoin::MITER_CLIP:
-        out << "miter-clip"sv;
-        break;
+            out << "miter-clip"sv;
+            break;
         case StrokeLineJoin::ROUND:
-        out << "round"sv;
-        break;
+            out << "round"sv;
+            break;
     }
     return out;
 }
@@ -78,16 +80,13 @@ void ColorPrint::operator()(const std::string& color) const {
 }
 
 void ColorPrint::operator()(const Rgb& color) const {
-    out << "rgb("sv << static_cast<int>(color.red) << ","sv
-                    << static_cast<int>(color.green) << ","sv
-                    << static_cast<int>(color.blue) << ")"sv;
+    out << "rgb("sv << static_cast<int>(color.red) << ","sv << static_cast<int>(color.green) << ","sv
+        << static_cast<int>(color.blue) << ")"sv;
 }
 
 void ColorPrint::operator()(const Rgba& color) const {
-    out << "rgba("sv << static_cast<int>(color.red) << ","sv
-                     << static_cast<int>(color.green) << ","sv
-                     << static_cast<int>(color.blue) << ","sv
-                     << color.opacity << ")"sv;
+    out << "rgba("sv << static_cast<int>(color.red) << ","sv << static_cast<int>(color.green) << ","sv
+        << static_cast<int>(color.blue) << ","sv << color.opacity << ")"sv;
 }
 
 std::ostream& operator<<(std::ostream& out, const Color& color) {
@@ -117,19 +116,19 @@ Line& Line::SetPoint2(Point point) {
 
 void Line::RenderObject(const RenderContext& context) const {
     auto& out = context.out;
-    out << "<line x1=\""sv << point1_.x << "\" y1=\""sv << point1_.y <<"\" "sv;
-    out << "x2=\""sv << point2_.x << "\" y2=\""sv << point2_.y <<"\""sv;
+    out << "<line x1=\""sv << point1_.x << "\" y1=\""sv << point1_.y << "\" "sv;
+    out << "x2=\""sv << point2_.x << "\" y2=\""sv << point2_.y << "\""sv;
     RenderAttrs(out);
     out << "/>"sv;
 }
 
 // ---------- Circle ------------------
-Circle& Circle::SetCenter(Point center)  {
+Circle& Circle::SetCenter(Point center) {
     center_ = center;
     return *this;
 }
 
-Circle& Circle::SetRadius(double radius)  {
+Circle& Circle::SetRadius(double radius) {
     radius_ = radius;
     return *this;
 }
@@ -151,11 +150,11 @@ Polyline& Polyline::AddPoint(Point point) {
 void Polyline::RenderObject(const RenderContext& context) const {
     auto& out = context.out;
     bool first = true;
-    
+
     out << "<polyline points=\""sv;
 
-    for(const Point& point : points_) {
-        if(first) {
+    for (const Point& point : points_) {
+        if (first) {
             first = false;
         } else {
             out << ' ';
@@ -163,7 +162,7 @@ void Polyline::RenderObject(const RenderContext& context) const {
         out << point.x << ',' << point.y;
         first = false;
     }
-    
+
     out << "\" "sv;
     RenderAttrs(out);
     out << "/>"sv;
@@ -212,10 +211,10 @@ void Text::RenderObject(const RenderContext& context) const {
     RenderAttr(out, " dx"sv, offset_.x);
     RenderAttr(out, " dy"sv, offset_.y);
     RenderAttr(out, " font-size"sv, font_size_);
-    if(!font_family_.empty()) {
+    if (!font_family_.empty()) {
         RenderAttr(out, " font-family"sv, font_family_);
     }
-    if(!font_weight_.empty()) {
+    if (!font_weight_.empty()) {
         RenderAttr(out, " font-weight"sv, font_weight_);
     }
     out << '>';
@@ -233,7 +232,7 @@ void Document::Render(std::ostream& out) const {
     out << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">"sv << std::endl;
 
     RenderContext context{out, 2, 2};
-    for(const auto& ob : objects_) {
+    for (const auto& ob : objects_) {
         ob->Render(context);
     }
 

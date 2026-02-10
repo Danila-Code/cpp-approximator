@@ -48,8 +48,8 @@ Matrix GetInverseMatrix(const Matrix& matrix, double det) {
     size_t size = matrix.size();
     Matrix inverse_matrix(size, std::vector<double>(size));
 
-    for (size_t i = 0; i < size; ++i) { // change row
-        for (size_t j = 0; j < size; ++j) { // change col
+    for (size_t i = 0; i < size; ++i) {      // change row
+        for (size_t j = 0; j < size; ++j) {  // change col
             inverse_matrix[i][j] = CalcAlgebraicAddition(i, j, matrix) / det;
         }
     }
@@ -93,14 +93,13 @@ void EquationSystem::SolveByTheGauss() const {
                 continue;
             }
             first_item = matrix_[raw][i];
-            for (size_t j = i;j < size; ++j) {
+            for (size_t j = i; j < size; ++j) {
                 matrix_[raw][j] -= matrix_[i][j] * first_item;
             }
             right_part_[raw] -= right_part_[i] * first_item;
         }
     }
 }
-
 
 // calc system of equations and return solution
 std::optional<std::vector<double>> EquationSystem::GetSolve() const {
@@ -114,10 +113,10 @@ std::optional<std::vector<double>> EquationSystem::GetSolve() const {
 
     SolveByTheGauss();
     res = right_part_;
-    
-    //Matrix inverse_matrix = GetInverseMatrix(matrix_, det);
-    //res = MultiplyMatrix(inverse_matrix, right_part_);
+
+    // Matrix inverse_matrix = GetInverseMatrix(matrix_, det);
+    // res = MultiplyMatrix(inverse_matrix, right_part_);
 
     return res;
-    //return std::move(right_part_);
+    // return std::move(right_part_);
 }

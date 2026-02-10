@@ -19,17 +19,16 @@ template <typename T>
 std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
     for (auto item : vec) {
         out << item << std::endl;
-    } 
+    }
     return out;
 }
 
 double CalcY(const std::vector<double>& coeffs, double x) {
     int exp = 0;
-    return std::accumulate(coeffs.begin(), coeffs.end(), 0.0,
-        [&x, &exp](double init, double value) {
-            double res = init + value * pow(x, exp);
-            ++exp;
-            return res;
+    return std::accumulate(coeffs.begin(), coeffs.end(), 0.0, [&x, &exp](double init, double value) {
+        double res = init + value * pow(x, exp);
+        ++exp;
+        return res;
     });
 }
 
@@ -63,10 +62,9 @@ private:
         std::mt19937 gen(rd());
         std::uniform_real_distribution<> dis(1.0, 5.0);
         std::vector<double> vec(size + 1);
-        std::for_each(vec.begin(), vec.end(),
-            [&dis, &gen](double& item) {
-                item = static_cast<int>(dis(gen));
-                //item = dis(gen);
+        std::for_each(vec.begin(), vec.end(), [&dis, &gen](double& item) {
+            item = static_cast<int>(dis(gen));
+            // item = dis(gen);
         });
         polynom_coeff = std::move(vec);
     }
@@ -85,27 +83,25 @@ void TestRendering() {
     std::vector<Data> data = polynom.GenerateData(min_x, max_x, count);
 
     Approximator app;
-    //app.SetData(data);
-    //auto res = app.GetPolynom(max_power);
+    // app.SetData(data);
+    // auto res = app.GetPolynom(max_power);
     std::ifstream in("input.json"s);
     JsonReader reader(in);
     reader.SetData(app);
     app.ApproximateData();
-    renderer::RenderSettings settings{
-        .width = 500,
-        .height = 500,
-        .padding = 10,
-        .line_width = 1,
-        .radius = 3,
-        .line_color = svg::Color("Black"s),
-        .circle_color = svg::Color("Red"s)
-    };
+    renderer::RenderSettings settings{.width = 500,
+                                      .height = 500,
+                                      .padding = 10,
+                                      .line_width = 1,
+                                      .radius = 3,
+                                      .line_color = svg::Color("Black"s),
+                                      .circle_color = svg::Color("Red"s)};
     renderer::GraphRenderer renderer(settings);
     ApproximatorManager app_manager(app, renderer);
 
     std::ofstream out("graph_1.json");
     reader.ReturnResult(app_manager, out);
-    //app_manager.RenderGraph(out);
+    // app_manager.RenderGraph(out);
 
     std::cout << "Result coefficients:\n"s << app.GetPolynom().ToString() << std::endl;
 
@@ -117,24 +113,22 @@ void TestRendering() {
 }
 
 int main() {
-    //TestRendering();
+    // TestRendering();
 
     Approximator app;
     JsonReader reader(std::cin);
     reader.SetData(app);
     app.ApproximateData();
 
-    renderer::RenderSettings settings{
-        .width = 500,
-        .height = 500,
-        .padding = 10,
-        .line_width = 1,
-        .radius = 3,
-        .line_color = svg::Color("Black"s),
-        .circle_color = svg::Color("Red"s)
-    };
+    renderer::RenderSettings settings{.width = 500,
+                                      .height = 500,
+                                      .padding = 10,
+                                      .line_width = 1,
+                                      .radius = 3,
+                                      .line_color = svg::Color("Black"s),
+                                      .circle_color = svg::Color("Red"s)};
     renderer::GraphRenderer r(settings);
-    
+
     ApproximatorManager manager(app, r);
     reader.ReturnResult(manager, std::cout);
 }

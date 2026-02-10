@@ -23,14 +23,14 @@ namespace {
 // n - max power
 Matrix GetXPowers(const std::vector<Data>& data, int max_power) {
     // matrix with x powers
-    const size_t size = 2 * max_power; // powers from 1 to 2*max_power
+    const size_t size = 2 * max_power;  // powers from 1 to 2*max_power
     std::vector<std::vector<double>> x_powers(size);
-    
-    for(size_t i = 0; i < size; ++i) {
-        x_powers[i].reserve(data.size()); // x[0] to x[m-1]
 
-        for(size_t j = 0; j < data.size(); ++j) {
-            double prev_x_power = i > 0 ? x_powers[i-1][j] : 1;
+    for (size_t i = 0; i < size; ++i) {
+        x_powers[i].reserve(data.size());  // x[0] to x[m-1]
+
+        for (size_t j = 0; j < data.size(); ++j) {
+            double prev_x_power = i > 0 ? x_powers[i - 1][j] : 1;
             x_powers[i].emplace_back(prev_x_power * data[j].x);
         }
     }
@@ -48,9 +48,8 @@ std::vector<double> GetSumOfXPowers(const Matrix& x_powers, int max_power) {
 
     sum_x_powers.emplace_back(x_powers[0].size());
 
-    std::for_each(x_powers.begin(), x_powers.end(),
-        [&sum_x_powers](const std::vector<double>& vec) {
-            sum_x_powers.emplace_back(std::accumulate(vec.begin(), vec.end(), 0.0));
+    std::for_each(x_powers.begin(), x_powers.end(), [&sum_x_powers](const std::vector<double>& vec) {
+        sum_x_powers.emplace_back(std::accumulate(vec.begin(), vec.end(), 0.0));
     });
     return sum_x_powers;
 }
@@ -67,11 +66,11 @@ std::vector<double> GetSumOfXPowers(const Matrix& x_powers, int max_power) {
 Matrix GetMatrix(const Matrix& x_powers, int max_power) {
     std::vector<double> sum_x_powers = GetSumOfXPowers(x_powers, max_power);
     const size_t size = max_power + 1;
-    Matrix matrix(size); // matrix
+    Matrix matrix(size);  // matrix
 
-    for(size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         matrix[i] = std::vector<double>(size);
-        for(size_t j = 0; j < size; ++j) { // fill cols
+        for (size_t j = 0; j < size; ++j) {  // fill cols
             matrix[i][j] = sum_x_powers[i + j];
         }
     }
@@ -81,11 +80,10 @@ Matrix GetMatrix(const Matrix& x_powers, int max_power) {
 std::vector<double> GetRightPart(const Matrix& x_powers, const std::vector<Data>& data, int max_power) {
     std::vector<double> right_part(max_power + 1);
 
-    right_part[0] = std::accumulate(data.begin(), data.end(), 0,
-        [](double init, Data data) {
-            return init + data.y;
+    right_part[0] = std::accumulate(data.begin(), data.end(), 0, [](double init, Data data) {
+        return init + data.y;
     });
-    
+
     for (size_t i = 1; i < right_part.size(); ++i) {
         double res = 0;
         for (size_t j = 0; j < data.size(); ++j) {
@@ -135,9 +133,8 @@ double Approximator::GetSumSquaredErrors() const {
     if (!polynom_) {
         return 0;
     }
-    return std::accumulate(data_.begin(), data_.end(), 0,
-        [this](double init, Data point) {
-            return init + pow(point.y - (*polynom_)(point.x), 2);
+    return std::accumulate(data_.begin(), data_.end(), 0, [this](double init, Data point) {
+        return init + pow(point.y - (*polynom_)(point.x), 2);
     });
 }
 

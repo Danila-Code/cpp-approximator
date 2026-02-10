@@ -17,10 +17,8 @@ std::vector<double> MultiplyMatrix(const Matrix& matrix, const std::vector<doubl
 // system of equations
 class EquationSystem {
 public:
-    explicit EquationSystem(Matrix matrix, std::vector<double> right_part) 
-        : matrix_{std::move(matrix)},
-          right_part_{std::move(right_part)} {
-    }
+    explicit EquationSystem(Matrix matrix, std::vector<double> right_part) :
+        matrix_{std::move(matrix)}, right_part_{std::move(right_part)} {}
 
     // calc system of equations and return solution
     std::optional<std::vector<double>> GetSolve() const;
