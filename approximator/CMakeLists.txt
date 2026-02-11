@@ -19,6 +19,12 @@ file(GLOB_RECURSE PROJECT_SOURCES
     "${SOURCE_DIR}/*.cpp"
 )
 
+# ===================== approximator_lib ====================
+add_library(approximator_lib
+    ${SOURCE_DIR}/approximator.cpp
+    ${SOURCE_DIR}/equation_system.cpp
+)
+
 add_executable(
     approximator
     ${PROJECT_SOURCES}
@@ -28,3 +34,13 @@ target_include_directories(approximator PRIVATE
     ${INCLUDE_DIR}
     ${SOURCE_DIR}
 )
+
+target_link_libraries(approximator PRIVATE approximator_lib)
+
+# ============================================================
+# optional tests
+# ============================================================
+option(BUILD_TESTS "Build approximator tests" ON)
+if(BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
