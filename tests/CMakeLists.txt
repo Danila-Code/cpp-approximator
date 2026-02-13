@@ -8,4 +8,8 @@ target_link_libraries(tests PRIVATE
     approximator_lib
 )
 
+target_include_directories(tests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../approximator_lib/include
+)
+
 add_test(NAME test_approximator COMMAND test_approximator)

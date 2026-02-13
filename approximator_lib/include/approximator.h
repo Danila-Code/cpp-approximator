@@ -8,7 +8,6 @@
 
 #include "equation_system.h"
 
-
 namespace {
 // output monomial with coefficient coef and x in power of i
 void PrintMonomial(std::ostream& out, double coef, size_t i) {
